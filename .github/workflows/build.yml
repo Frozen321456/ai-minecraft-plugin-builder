@@ -1,0 +1,37 @@
+name: Build Minecraft Plugin
+
+on:
+  push:
+    paths:
+      - "plugins/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build plugins
+        run: |
+          for dir in plugins/*; do
+            if [ -f "$dir/gradlew" ]; then
+              cd "$dir"
+              chmod +x gradlew
+              ./gradlew build
+              cd ../..
+            fi
+          done
+
+      - name: Upload JARs
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-jars
+          path: plugins/**/build/libs/*.jar
