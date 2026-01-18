@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+    }
+
+    jar {
+        archiveBaseName.set(project.name)
+        from(sourceSets.main.output)
+    }
+}
+
+includeEmptyDirs = true
+
